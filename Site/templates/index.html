@@ -1,6 +1,6 @@
 <head>
 	<title>TCP Socket test</title>
-	<script type="text/javascript" src="java_socket_bridge.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='java_socket_bridge.js') }}"></script>
 	<script type="text/javascript">
 
                 var host = 'localhost';
@@ -26,7 +26,7 @@
         <button onclick="send()">Send test message</button>
 
 	<div>
-        <applet id="JavaSocketBridge" archive="JavaSocketBridge.jar" code="JavaSocketBridge.class" width="1" height="1"></applet>
+		<applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
 	</div>
 </body>
 </html>
