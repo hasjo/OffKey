@@ -25,6 +25,11 @@
 	<button onclick="connect()">Connect</button>
         <button onclick="send()">Send test message</button>
 
+	<form action="send()">
+	        Message:<br>
+		<input type="text" name="firstname" value="">
+		<input type="submit" value="Submit">
+
 	<div>
 		<applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
 	</div>
