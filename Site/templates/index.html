@@ -1,0 +1,32 @@
+<head>
+	<title>TCP Socket test</title>
+	<script type="text/javascript" src="java_socket_bridge.js"></script>
+	<script type="text/javascript">
+
+                var host = 'localhost';
+                var port = 6311;
+
+		function connect(){
+			socket_connect(host, port);  
+			alert("connected");
+		}
+                
+                function send(){
+                        socket_send("This is a TCP test message");
+                }
+
+		function on_socket_get(message){
+                        alert("TCP Message: " + message);
+		}
+	</script>
+</head>
+
+<body>
+	<button onclick="connect()">Connect</button>
+        <button onclick="send()">Send test message</button>
+
+	<div>
+        <applet id="JavaSocketBridge" archive="JavaSocketBridge.jar" code="JavaSocketBridge.class" width="1" height="1"></applet>
+	</div>
+</body>
+</html>
