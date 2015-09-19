@@ -14,11 +14,16 @@
 		function send(form){
 			socket_connect(host, port);
 			var InputVar = form.username.value;
-                        socket_send(InputVar);
+                        socket_send("AUTH " + InputVar);
                 }
 
 		function on_socket_get(message){
-                        alert("TCP Message: " + message);
+			if(message != 'DENIED') {
+				window.location = "/user/" +message
+			} else {
+				alert("DEE-NIED");
+			}
+
 		}
 	</script>
 </head>
