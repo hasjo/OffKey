@@ -11,8 +11,10 @@
 			alert("connected");
 		}
                 
-                function send(){
-                        socket_send("This is a TCP test message");
+		function send(form){
+			socket_connect(host, port);
+			var InputVar = form.username.value;
+                        socket_send(InputVar);
                 }
 
 		function on_socket_get(message){
@@ -22,14 +24,11 @@
 </head>
 
 <body>
-	<button onclick="connect()">Connect</button>
-        <button onclick="send()">Send test message</button>
-
-	<form action="send()">
-	        Message:<br>
-		<input type="text" name="firstname" value="">
-		<input type="submit" value="Submit">
-
+	<form onsubmit="javascript:send(this.form); return false;">
+	        Username:<br>
+		<input type="text" name="username" value="">
+		<INPUT TYPE="button" NAME="button" Value="Click" onClick="send(this.form)">
+	</form>
 	<div>
 		<applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
 	</div>

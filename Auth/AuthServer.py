@@ -4,10 +4,16 @@ import threading
 import redis
 
 def ThreadCommand(newSock):
+    r = redis.StrictRedis(host='172.17.42.1', port=6379, db=0)
     print('kicked into a thread')
-    ClientInput = newSock.recv(2048).decode('UTF-8')
-    print('Received message: ' + ClientInput)
-    newSock.sendall(bytes('THIS IS A TEST MESSAGE', 'UTF-8'))
+    ClientInput = newSock.recv(2048).decode('UTF-8').rstrip()
+    print('Received username: ' + ClientInput)
+    UsernameResponse = r.get(ClientInput).decode()
+    print(UsernameResponse)
+    if UsernameResponse != 'None':
+        newSock.sendall(bytes('ACCEPTED', 'UTF-8'))
+    else:
+        newSock.sendall(bytes('DENIED', 'UTF-8'))
     newSock.shutdown(2)
     newSock.close()
 
