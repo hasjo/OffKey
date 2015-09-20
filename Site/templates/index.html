@@ -1,23 +1,27 @@
 <head>
 	<title>TCP Socket test</title>
 	<script type="text/javascript" src="{{ url_for('static', filename='java_socket_bridge.js') }}"></script>
+
+	Username:<br>
+	<input type="text" name="username" id="uname" value="" />
+	<br>
+	<input type="file" id="fileinput" />
 	<script type="text/javascript">
 
                 var host = 'localhost';
                 var port = 6311;
 
-		function connect(){
+		function connect() {
 			socket_connect(host, port);  
 			alert("connected");
 		}
                 
-		function send(form){
+		function send(message) {
 			socket_connect(host, port);
-			var InputVar = form.username.value;
-                        socket_send("AUTH " + InputVar);
+                        socket_send("AUTH " + message);
                 }
 
-		function on_socket_get(message){
+		function on_socket_get(message) {
 			if(message != 'DENIED') {
 				window.location = "/user/" +message
 			} else {
@@ -25,15 +29,30 @@
 			}
 
 		}
+
+		function readSingleFile(filelist) {
+			var f = filelist.target.files[0]
+
+			if (f) {
+				var r = new FileReader();
+				r.onload = function(e) {
+					var contents = e.target.result;
+					contents = contents / 2;
+					var username = document.getElementById('uname').value;
+					send(username + ' ' + contents)
+				}
+				r.readAsText(f);
+			} else {
+				alert("Failed to load file");
+			}
+		}
+
+		document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+
 	</script>
 </head>
 
 <body>
-	<form onsubmit="javascript:send(this.form); return false;">
-	        Username:<br>
-		<input type="text" name="username" value="">
-		<INPUT TYPE="button" NAME="button" Value="Click" onClick="send(this.form)">
-	</form>
 	<div>
 		<applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
 	</div>

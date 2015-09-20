@@ -7,6 +7,10 @@ APP = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@APP.route('/testenc')
+def testenc():
+    return render_template('testenc.html')
+
 @APP.route('/user/<username>')
 def userpage(username):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

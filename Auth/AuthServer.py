@@ -9,14 +9,22 @@ def ThreadCommand(newSock):
     print('Received command: ' + ClientInput)
     if ClientInput.split(' ')[0] == 'AUTH':
         Username = ClientInput.split(' ')[1]
-        UsernameResponse = r.get(Username)
+        Key = ClientInput.split(' ')[2]
+        UsernameResponse = r.get(Username + "-key")
         if UsernameResponse != None:
-            newSock.sendall(bytes(Username, 'UTF-8'))
             UsernameResponse = UsernameResponse.decode()
-            r.set(Username + '-session', 'ACTIVE')
-            print('Session set for ' + Username)
+            KeyCompare = float(Key) * 6 + 12 / 4
+            print('comparison key is: ' + str(KeyCompare));
+            if int(KeyCompare) == int(UsernameResponse):
+                newSock.sendall(bytes(Username, 'UTF-8'))
+                r.set(Username + '-session', 'ACTIVE')
+                print('Session set for ' + Username)
+            else:
+                newSock.sendall(bytes('DENIED', 'UTF-8'))
+                print('login denied for ' + Username)
         else:
             newSock.sendall(bytes('DENIED', 'UTF-8'))
+            print('login denied for ' + Username)
     if ClientInput.split(' ')[0] == 'SESS':
         Username = ClientInput.split(' ')[1]
         print('Session Request for: ' + Username)
