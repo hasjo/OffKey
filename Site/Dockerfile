@@ -1,4 +1,4 @@
 FROM ubuntu
 RUN apt-get update && apt-get -y --force-yes install python3-pip
-RUN pip3 install flask
+RUN pip3 install flask flask-bootstrap
 WORKDIR /workspace

@@ -1,60 +1,87 @@
-<head>
-	<title>TCP Socket test</title>
-	<script type="text/javascript" src="{{ url_for('static', filename='java_socket_bridge.js') }}"></script>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>OffKey Authentication PoC</title>
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/mystyles.css') }}" rel="stylesheet">
+        <script type="text/javascript" src="{{ url_for('static', filename='java_socket_bridge.js') }}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        
+        <div class="container" style="width: 500px">
+            <div class="starter-template" style="margin-top: 75px">
+            Username:<br>
+            <input class="form-control" type="text" name="username" id="uname" value="" />
+            <br>
+            <span class="btn btn-default btn-file">
+            Key plz<input class="fileupload fileupload-new" type="file" id="fileinput" />
+            </span>
+            </div>
+        </div>
 
-	Username:<br>
-	<input type="text" name="username" id="uname" value="" />
-	<br>
-	<input type="file" id="fileinput" />
-	<script type="text/javascript">
+        <script type="text/javascript">
+            var host = 'localhost';
+            var port = 6311;
 
-                var host = 'localhost';
-                var port = 6311;
+            function connect() {
+                socket_connect(host, port);  
+                alert("connected");
+            }
 
-		function connect() {
-			socket_connect(host, port);  
-			alert("connected");
-		}
-                
-		function send(message) {
-			socket_connect(host, port);
-                        socket_send("AUTH " + message);
+            function send(message) {
+                socket_connect(host, port);
+                socket_send("AUTH " + message);
+            }
+
+            function on_socket_get(message) {
+                if(message != 'DENIED') {
+                    window.location = "/user/" +message
+                } else {
+                    alert("DEE-NIED");
                 }
+            }
 
-		function on_socket_get(message) {
-			if(message != 'DENIED') {
-				window.location = "/user/" +message
-			} else {
-				alert("DEE-NIED");
-			}
+            function readSingleFile(filelist) {
+                var f = filelist.target.files[0]
+                if (f) {
+                    var r = new FileReader();
+                    r.onload = function(e) {
+                        var contents = e.target.result;
+                        contents = contents / 2;
+                        var username = document.getElementById('uname').value;
+                        send(username + ' ' + contents)
+                    }
+                    r.readAsText(f);
+                } else {
+                    alert("Failed to load file");
+                }
+            }
+            document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+        </script>
+    </head>
 
-		}
-
-		function readSingleFile(filelist) {
-			var f = filelist.target.files[0]
-
-			if (f) {
-				var r = new FileReader();
-				r.onload = function(e) {
-					var contents = e.target.result;
-					contents = contents / 2;
-					var username = document.getElementById('uname').value;
-					send(username + ' ' + contents)
-				}
-				r.readAsText(f);
-			} else {
-				alert("Failed to load file");
-			}
-		}
-
-		document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
-
-	</script>
-</head>
-
-<body>
-	<div>
-		<applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
-	</div>
-</body>
+    <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">OffKey Authentication</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div>
+    <applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
+    </div>
+    </body>
 </html>

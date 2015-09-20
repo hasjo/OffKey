@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
 import os
 import socket
 APP = Flask(__name__)
