@@ -10,11 +10,11 @@ def auth_user(user, string):
         UsernameResponse = UsernameResponse.decode()
         Key = float(string) * 6 + 12 / 4
         if int(UsernameResponse) == int(Key):
-            return 'SUCCESS\n'
+            return 'SUCCESS'
         else:
-            return 'FAILURE, Key is: ' + str(Key) + ' Rediskey is: ' + str(UsernameResponse) + '\n'
+            return 'FAILURE'
     else:
-        return 'USER DOES NOT EXIST\n'
+        return 'USER DOES NOT EXIST'
 
 if __name__ == '__main__':
     APP.run(debug=True, host='0.0.0.0', port=80)

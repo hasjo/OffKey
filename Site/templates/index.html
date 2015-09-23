@@ -22,27 +22,6 @@
         </div>
 
         <script type="text/javascript">
-            var host = 'localhost';
-            var port = 6311;
-
-            function connect() {
-                socket_connect(host, port);  
-                alert("connected");
-            }
-
-            function send(message) {
-                socket_connect(host, port);
-                socket_send("AUTH " + message);
-            }
-
-            function on_socket_get(message) {
-                if(message != 'DENIED') {
-                    window.location = "/user/" +message
-                } else {
-                    alert("DEE-NIED");
-                }
-            }
-
             function readSingleFile(filelist) {
                 var f = filelist.target.files[0]
                 if (f) {
@@ -51,13 +30,32 @@
                         var contents = e.target.result;
                         contents = contents / 2;
                         var username = document.getElementById('uname').value;
-                        send(username + ' ' + contents)
+                        HandleServContents(username, contents);
                     }
                     r.readAsText(f);
                 } else {
                     alert("Failed to load file");
                 }
             }
+
+            function HandleServContents(uname, conts) {
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.onreadystatechange = function() { 
+                        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                            if (xmlHttp.responseText == 'SUCCESS') {
+                                alert('SUCCESS');
+                            } else if (xmlHttp.responseText == 'FAILURE') {
+                                alert('FAILURE');
+                            } else if (xmlHttp.responseText == 'USER DOES NOT EXIST') {
+                                alert('USER NONEXISTANT');
+                            } else {
+                                alert('Improper Response From Auth Server');
+                            }
+                    }
+                    xmlHttp.open("GET", 'http://172.17.42.1/api/auth/' + uname + '/' + conts, true);
+                    xmlHttp.send(null);
+            }
+
             document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
         </script>
     </head>
@@ -80,8 +78,5 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-    <div>
-    <applet id="JavaSocketBridge" archive="{{ url_for('static', filename='JavaSocketBridge.jar') }}" code="JavaSocketBridge.class" width="1" height="1"></applet>
-    </div>
     </body>
 </html>
