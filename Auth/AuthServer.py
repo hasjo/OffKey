@@ -4,7 +4,7 @@ APP = Flask(__name__)
 
 @APP.route('/api/auth/<user>/<string>/', methods=['GET'])
 def auth_user(user, string):
-    r = redis.StrictRedis(host='172.17.42.1', port=6379, db=0)
+    r = redis.StrictRedis(host='redis', port=6379, db=0)
     UsernameResponse = r.get(user + "-key")
     if UsernameResponse != None:
         UsernameResponse = UsernameResponse.decode()
